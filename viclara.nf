@@ -509,15 +509,15 @@ workflow viclara {
     
     // MODULE: Call variants, Generate consensus sequence
     if (params.variant_caller == 'bcftools') {
-        BCFTOOLS_MPILEUP(ch_bam, ch_fasta)
-        BCFTOOLS_CONSENSUS(BCFTOOLS_MPILEUP.out.vcf, BCFTOOLS_MPILEUP.out.tbi, ch_bam, ch_fasta)
+        BCFTOOLS_MPILEUP(ch_bam, ch_fasta.collect())
+        BCFTOOLS_CONSENSUS(BCFTOOLS_MPILEUP.out.vcf, BCFTOOLS_MPILEUP.out.tbi, ch_bam, ch_fasta.collect())
         ch_consensus_fasta = BCFTOOLS_CONSENSUS.out.fasta
 
         // MODULE: Build SnpEff db and Annotate variants 
-        SNPEFF_BCFTOOLS(BCFTOOLS_MPILEUP.out.vcf, ch_fasta, ch_gff)
+        SNPEFF_BCFTOOLS(BCFTOOLS_MPILEUP.out.vcf, ch_fasta.collect(), ch_gff.collect())
     }
     if (params.variant_caller == 'varscan') {
-        SAMTOOLS_MPILEUP(ch_bam, ch_fasta)
+        SAMTOOLS_MPILEUP(ch_bam, ch_fasta.collect())
         VARSCAN_MPILEUP(SAMTOOLS_MPILEUP.out.mpileup)
 
         ch_varscan_hifreq_vcf = VARSCAN_MPILEUP.out.vcf.map { row -> [row[0], [ file(row[1][1], checkIfExists: true) ] ] }
@@ -526,12 +526,12 @@ workflow viclara {
         ch_varscan_lofreq_vcf = VARSCAN_MPILEUP.out.vcf.map { row -> [row[0], [ file(row[1][0], checkIfExists: true) ] ] }
         ch_varscan_lofreq_tbi = VARSCAN_MPILEUP.out.tbi.map { row -> [row[0], [ file(row[1][0], checkIfExists: true) ] ] }
 
-        VARSCAN_CONSENSUS(ch_varscan_hifreq_vcf, ch_varscan_hifreq_tbi, ch_bam, ch_fasta)
+        VARSCAN_CONSENSUS(ch_varscan_hifreq_vcf, ch_varscan_hifreq_tbi, ch_bam, ch_fasta.collect())
         ch_consensus_fasta = VARSCAN_CONSENSUS.out.fasta
 
         // MODULE: Build SnpEff db and Annotate variants
-        SNPEFF_VARSCAN_HIFREQ(ch_varscan_hifreq_vcf, ch_fasta, ch_gff)
-        SNPEFF_VARSCAN_LOFREQ(ch_varscan_lofreq_vcf, ch_fasta, ch_gff)
+        SNPEFF_VARSCAN_HIFREQ(ch_varscan_hifreq_vcf, ch_fasta.collect(), ch_gff.collect())
+        SNPEFF_VARSCAN_LOFREQ(ch_varscan_lofreq_vcf, ch_fasta.collect(), ch_gff.collect())
 
     }
 
