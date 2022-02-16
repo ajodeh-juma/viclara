@@ -1,0 +1,15 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+#!genome-build ViralMultiSegProj14631
+#!genome-build-accession NCBI_Assembly:GCF_000847345.1
+##sequence-region NC_014395.1 1 1690
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=11588
+NC_014395.1	RefSeq	region	1	1690	.	+	.	ID=NC_014395.1:1..1690;Dbxref=taxon:11588;Name=S;collection-date=1977;country=Egypt: Sharqiya;gbkey=Src;genome=genomic;isolation-source=human sera;mol_type=genomic RNA;nat-host=Homo sapiens;segment=S;strain=ZH-548
+NC_014395.1	RefSeq	primer_binding_site	1	22	.	+	.	ID=id-NC_014395.1:1..22;gbkey=primer_bind
+NC_014395.1	RefSeq	gene	35	832	.	+	.	ID=gene-RVFV_sS_gp1;Dbxref=GeneID:9538292;Name=NSs;gbkey=Gene;gene=NSs;gene_biotype=protein_coding;locus_tag=RVFV_sS_gp1
+NC_014395.1	RefSeq	CDS	35	832	.	+	0	ID=cds-YP_003848706.1;Parent=gene-RVFV_sS_gp1;Dbxref=Genbank:YP_003848706.1,GeneID:9538292;Name=YP_003848706.1;gbkey=CDS;gene=NSs;locus_tag=RVFV_sS_gp1;product=non-structural protein;protein_id=YP_003848706.1
+NC_014395.1	RefSeq	gene	915	1652	.	-	.	ID=gene-RVFV_sS_gp2;Dbxref=GeneID:9538291;Name=NP;gbkey=Gene;gene=NP;gene_biotype=protein_coding;locus_tag=RVFV_sS_gp2
+NC_014395.1	RefSeq	CDS	915	1652	.	-	0	ID=cds-YP_003848707.1;Parent=gene-RVFV_sS_gp2;Dbxref=Genbank:YP_003848707.1,GeneID:9538291;Name=YP_003848707.1;gbkey=CDS;gene=NP;locus_tag=RVFV_sS_gp2;product=nucleocapsid;protein_id=YP_003848707.1
+NC_014395.1	RefSeq	primer_binding_site	1671	1690	.	-	.	ID=id-NC_014395.1:1671..1690;gbkey=primer_bind
+###

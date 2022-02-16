@@ -1,0 +1,556 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "https://raw.githubusercontent.com/nf-core/viclara/master/nextflow_schema.json",
+    "title": "viclara pipeline parameters",
+    "description": "virus classification and whole genome assembly from metagenomics data",
+    "type": "object",
+    "definitions": {
+        "input_output_options": {
+            "title": "Input/output options",
+            "type": "object",
+            "fa_icon": "fas fa-terminal",
+            "description": "Define where the pipeline should find input data and save output data.",
+            "required": [
+                "input"
+            ],
+            "properties": {
+                "input": {
+                    "type": "string",
+                    "fa_icon": "fas fa-dna",
+                    "description": "Input FastQ files.",
+                    "help_text": "Use this to specify the location of your input FastQ files. For example:\n\n```bash\n--input 'path/to/data/sample_*_{1,2}.fastq'\n```\n\nPlease note the following requirements:\n\n1. The path must be enclosed in quotes\n2. The path must have at least one `*` wildcard character\n3. When using the pipeline with paired end data, the path must use `{1,2}` notation to specify read pairs.\n\nIf left unspecified, a default pattern is used: `data/*{1,2}.fastq.gz`"
+                },
+                "single_end": {
+                    "type": "boolean",
+                    "description": "Specifies that the input is single-end reads.",
+                    "fa_icon": "fas fa-align-center",
+                    "help_text": "By default, the pipeline expects paired-end data. If you have single-end data, you need to specify `--single_end` on the command line when you launch the pipeline. A normal glob pattern, enclosed in quotation marks, can then be used for `--input`. For example:\n\n```bash\n--single_end --input '*.fastq'\n```\n\nIt is not possible to run a mixture of single-end and paired-end files in one run."
+                },
+                "metadata": {
+                    "type": "string",
+                    "fa_icon": "fas fa-dna",
+                    "description": "Input comma-separated values (csv) metadata file containing the columns 'sample_name' and  'Ct.",
+                    "help_text": "Use this to specify the location of your metadata file. For example:\n\n```bash\n --meta 'path/to/data/metadata.csv'\n```\n\n"
+                },
+                "outdir": {
+                    "type": "string",
+                    "description": "The output directory where the results will be saved.",
+                    "default": "./results",
+                    "fa_icon": "fas fa-folder-open"
+                },
+                "email": {
+                    "type": "string",
+                    "description": "Email address for completion summary.",
+                    "fa_icon": "fas fa-envelope",
+                    "help_text": "Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits. If set in your user config file (`~/.nextflow/config`) then you don't need to specify this on the command line for every run.",
+                    "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$"
+                }
+            }
+        },
+        "genome_options": {
+            "title": "genome options",
+            "type": "object",
+            "fa_icon": "fas fa-dna",
+            "description": "Options for the reference genome indices used to align reads.",
+            "properties": {
+                "segment":{
+                    "type": "string",
+                    "description": "genomic segment of the virus. options are 'S', 'M' and 'L'",
+                    "fa_icon": "fas fa-ban",
+                    "hidden": false,
+                    "enum": ["S", "M", "L"]
+                },
+                "filter_phix":{
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Filter PhiX sequences",
+                    "fa_icon": "fas fa-ban",
+                    "hidden": false
+                },
+                "host_fasta": {
+                    "type": "string",
+                    "description": "Path to the host FASTA genome file. Not required if either --host_bwa_index or --host_bowtie2_index is specified",
+                    "fa_icon": "fas fa-book",
+                    "help_text": "host genome FASTA file"
+                },
+                "host_bwa_index": {
+                    "type": "string",
+                    "fa_icon": "fas fa-font",
+                    "description": "Path to host genome directory or tar.gz archive for pre-built BWA index."
+                },
+                "host_bowtie2_index": {
+                    "type": "string",
+                    "fa_icon": "fas fa-font",
+                    "description": "Path to host genome directory or tar.gz archive for pre-built BOWTIE2 index."
+                },
+                "igenomes_base": {
+                    "type": "string",
+                    "description": "Directory / URL base for iGenomes references.",
+                    "default": "./igenomes",
+                    "fa_icon": "fas fa-cloud-download-alt",
+                    "hidden": true
+                },
+                "igenomes_ignore": {
+                    "type": "boolean",
+                    "description": "Do not load the iGenomes reference config.",
+                    "fa_icon": "fas fa-ban",
+                    "hidden": true,
+                    "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`."
+                }
+            }
+        },
+        "read_trimming_options": {
+            "title": "Read trimming options",
+            "type": "object",
+            "fa_icon": "fas fa-terminal",
+            "description": "Options to adjust read trimming criteria.",
+            "properties": {
+                "trimmer": {
+                    "type": "string",
+                    "default": "fastp",
+                    "description": "Specifies the alignment algorithm to use - available options are 'fastp', 'trimmomatic'.",
+                    "fa_icon": "fas fa-map-signs",
+                    "enum": [
+                        "fastp",
+                        "trimmomatic"
+                    ]
+                },
+                "adapters": {
+                    "type": "string",
+                    "description": "Path to FASTA adapters file",
+                    "fa_icon": "fas fa-font"
+                },
+                "illumina_clip": {
+                    "type": "string",
+                    "default": "2:30:10",
+                    "description": "Instructs Trimmomatic apply a maximum mismatch count, how accurate the match between the two adapter ligated reads reads must be for PE palindrome, and how accurate the match between any adapter etc. sequence must be against a read",
+                    "fa_icon": "fas fa-font"
+                },
+                "leading": {
+                    "type": "integer",
+                    "default": 3,
+                    "description": "Instructs Trimmomatic to cut bases off the start of a read, if below a threshold quality",
+                    "fa_icon": "fas fa-integer"
+                },
+                "trailing": {
+                    "type": "integer",
+                    "default": 3,
+                    "description": "Instructs Trimmomatic to cut bases off the end of a read, if below a threshold quality",
+                    "fa_icon": "fas fa-cut"
+                },
+                "average_quality": {
+                    "type": "integer",
+                    "default": 20,
+                    "description": "Instructs Trimmomatic or Fastp the average quality required in the sliding window",
+                    "fa_icon": "fas fa-cut"
+                },
+                "min_length": {
+                    "type": "integer",
+                    "default": 50,
+                    "description": "Instructs Trimmomatic or Fastp to drop the read if it is below a specified length",
+                    "fa_icon": "fas fa-cut"
+                },
+                "window_size": {
+                    "type": "integer",
+                    "default": 4,
+                    "description": "Instructs Trimmomatic to apply a sliding window (number of bases to average across)",
+                    "fa_icon": "fas fa-cut"
+                },
+                "window_quality": {
+                    "type": "integer",
+                    "default": 20,
+                    "description": "Instructs Trimmomatic to apply the average quality required in the sliding window",
+                    "fa_icon": "fas fa-cut"
+                },
+                "qualified_quality_phred": {
+                    "type": "integer",
+                    "default": 30, 
+                    "description": "Instructs Fastp to apply the --qualified_quality_phred option",
+                    "help_text": "The quality value that a base is qualified. Default 30 means phred quality >=Q30 is qualified",
+                    "fa_icon": "fas fa-cut"
+                },
+                "unqualified_percent_limit": {
+                    "type": "integer",
+                    "default": 10, 
+                    "description": "Instructs Fastp to apply the --unqualified_percent_limit option",
+                    "help_text": "How many percents of bases are allowed to be unqualified (0~100). Default 10 means 10%",
+                    "fa_icon": "fas fa-cut"
+                },
+                "skip_trimming": {
+                    "type": "boolean",
+                    "description": "Skip the adapter trimming step.",
+                    "help_text": "Use this if your input FastQ files have already been trimmed outside of the workflow or if you're very confident that there is no adapter contamination in your data.",
+                    "fa_icon": "fas fa-fast-forward"
+                },
+                "save_trimmed": {
+                    "type": "boolean",
+                    "description": "Save the trimmed FastQ files in the results directory.",
+                    "help_text": "By default, trimmed FastQ files will not be saved to the results directory. Specify this flag (or set to true in your config file) to copy these files to the results directory when complete.",
+                    "fa_icon": "fas fa-save"
+                },
+                "save_trimmed_fail": {
+                    "type": "boolean",
+                    "description": "Save failed trimmed reads.",
+                    "fa_icon": "fas fa-fast-forward"
+                }
+            }
+        },
+        "alignment_options" : {
+            "title": "Alignment options",
+            "type": "object",
+            "fa_icon": "fas fa-terminal",
+            "description": "Options to adjust parameters and filtering criteria for read alignments.",
+            "properties": {
+                "aligner": {
+                    "type": "string",
+                    "default": "bwa",
+                    "description": "Specifies the alignment algorithm to use - available options are 'bwa', 'bowtie2'.",
+                    "fa_icon": "fas fa-map-signs",
+                    "enum": [
+                        "bwa",
+                        "bowtie2"
+                    ]
+                },
+                "seq_center": {
+                    "type": "string",
+                    "description": "Sequencing center information to be added to read group of BAM files.",
+                    "fa_icon": "fas fa-synagogue"
+                },
+                "save_align_intermeds": {
+                    "type": "boolean",
+                    "description": "Save the intermediate BAM files from the alignment step.",
+                    "help_text": "By default, intermediate BAM files will not be saved. The final BAM files created after the appropriate filtering step are always saved to limit storage usage. Set this parameter to also save other intermediate BAM files.",
+                    "fa_icon": "fas fa-save"
+                },
+                "min_mapped": {
+                    "type":"integer",
+                    "description": "Minimum number of mapped reads to be used as threshold to drop low mapped samples",
+                    "default": 500,
+                    "fa-icon":"fas fa-cut"
+                }
+            }
+        },
+        "variant_calling_options" : {
+            "title": "Variant calling options",
+            "type": "object",
+            "fa_icon": "fas fa-fast-forward",
+            "description": "Options for variant calling",
+            "properties": {
+                "variant_caller": {
+                    "type": "string",
+                    "default": "bcftools",
+                    "description": "Specifies the variant calling algorithm to use - available options are 'bcftools', 'varscan'.",
+                    "fa_icon": "fas fa-map-signs",
+                    "enum": [
+                        "bcftools",
+                        "varscan"
+                    ]
+                },
+                "mpileup_depth": {
+                    "type": "integer",
+                    "description": "SAMtools mpileup max per-file depth, avoids excessive memory usage",
+                    "default": 0,
+                    "fa-icon": "fas fa-cut"
+                },
+                "min_base_quality": {
+                    "type": "integer",
+                    "description": "Skip bases with baseQ/BAQ smaller than this value when performing variant calling",
+                    "default": 0,
+                    "fa-icon": "fas fa-cut"
+                },
+                "min_coverage": {
+                    "type": "integer",
+                    "description": "Skip positions with an overall read depth smaller than this value when performing variant calling",
+                    "default": 0,
+                    "fa-icon": "fas fa-cut"
+                },
+                "min_allele_freq": {
+                    "type": "number",
+                    "description": "Minimum allele frequency threshold for calling variant ",
+                    "default": 0.25,
+                    "fa-icon": "fas fa-cut"
+                },
+                "max_allele_freq": {
+                    "type": "number",
+                    "description": "Maximum allele frequency threshold for calling variant ",
+                    "default": 0.75,
+                    "fa-icon": "fas fa-cut"
+                },
+                "varscan_strand_filter": {
+                    "type": "boolean",
+                    "description": "Ignore variants with >90% support on one strand",
+                    "default": true,
+                    "fa_icon": "fas fa-fast-forward"
+                },
+                "save_mplieup": {
+                    "type": "boolean",
+                    "description": "Save SAMtools mpileup output file",
+                    "default": false,
+                    "fa_icon": "fas fa-fast-forward"
+                }
+            }
+        },
+        "process_skipping_options": {
+            "title": "Process skipping options",
+            "type": "object",
+            "fa_icon": "fas fa-fast-forward",
+            "description": "Options to skip various steps within the workflow.",
+            "properties": {
+                "skip_multiqc": {
+                    "type": "boolean",
+                    "description": "Skip MultiQC.",
+                    "fa_icon": "fas fa-fast-forward"
+                },
+                "skip_qc": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-fast-forward",
+                    "description": "Skip all QC steps except for MultiQC."
+                },
+                "skip_trimming": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-fast-forward",
+                    "description": "Skip quality trimming step."
+                },
+                "skip_kraken2": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-fast-forward",
+                    "description": "Skip classification of reads using Kraken2.",
+                    "default": false
+                },
+                "skip_markduplicates": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-fast-forward",
+                    "description": "Skip picard MarkDuplicates step."
+                },
+                "skip_alignment": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-fast-forward",
+                    "description": "Skip all of the alignment-based processes within the pipeline."
+                },
+                "skip_assembly": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-fast-forward",
+                    "description": "Skip De novo assembly step.",
+                    "default": false
+                }
+            }
+        },
+        "classification_options" : {
+            "title": "Reads classification options",
+            "type": "object",
+            "fa_icon": "fas fa-terminal",
+            "description": "Options to specify reads classification using Kraken2.",
+            "properties": {
+                "database": {
+                    "type": "string",
+                    "description": "Path to the kraken2 database name",
+                    "fa_icon": "fas fa-terminal"
+                }
+            }
+        },
+        "generic_options": {
+            "title": "Generic options",
+            "type": "object",
+            "fa_icon": "fas fa-file-import",
+            "description": "Less common options for the pipeline, typically set in a config file.",
+            "help_text": "These options are common to all nf-core pipelines and allow you to customise some of the core preferences for how the pipeline runs.\n\nTypically these options would be set in a Nextflow config file loaded for all pipeline runs, such as `~/.nextflow/config`.",
+            "properties": {
+                "help": {
+                    "type": "boolean",
+                    "description": "Display help text.",
+                    "hidden": true,
+                    "fa_icon": "fas fa-question-circle"
+                },
+                "publish_dir_mode": {
+                    "type": "string",
+                    "default": "copy",
+                    "hidden": true,
+                    "description": "Method used to save pipeline results to output directory.",
+                    "help_text": "The Nextflow `publishDir` option specifies which intermediate files should be saved to the output directory. This option tells the pipeline what method should be used to move these files. See [Nextflow docs](https://www.nextflow.io/docs/latest/process.html#publishdir) for details.",
+                    "fa_icon": "fas fa-copy",
+                    "enum": [
+                        "symlink",
+                        "rellink",
+                        "link",
+                        "copy",
+                        "copyNoFollow",
+                        "move"
+                    ]
+                },
+                "validate_params": {
+                    "type": "boolean",
+                    "description": "Boolean whether to validate parameters against the schema at runtime",
+                    "default": true,
+                    "fa_icon": "fas fa-check-square",
+                    "hidden": true
+                },
+                "email_on_fail": {
+                    "type": "string",
+                    "description": "Email address for completion summary, only when pipeline fails.",
+                    "fa_icon": "fas fa-exclamation-triangle",
+                    "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$",
+                    "hidden": true,
+                    "help_text": "This works exactly as with `--email`, except emails are only sent if the workflow is not successful."
+                },
+                "plaintext_email": {
+                    "type": "boolean",
+                    "description": "Send plain-text email instead of HTML.",
+                    "fa_icon": "fas fa-remove-format",
+                    "hidden": true,
+                    "help_text": "Set to receive plain-text e-mails instead of HTML formatted."
+                },
+                "max_multiqc_email_size": {
+                    "type": "string",
+                    "description": "File size limit when attaching MultiQC reports to summary emails.",
+                    "default": "25.MB",
+                    "fa_icon": "fas fa-file-upload",
+                    "hidden": true,
+                    "help_text": "If file generated by pipeline exceeds the threshold, it will not be attached."
+                },
+                "monochrome_logs": {
+                    "type": "boolean",
+                    "description": "Do not use coloured log outputs.",
+                    "fa_icon": "fas fa-palette",
+                    "hidden": true,
+                    "help_text": "Set to disable colourful command line output and live life in monochrome."
+                },
+                "multiqc_config": {
+                    "type": "string",
+                    "description": "Custom config file to supply to MultiQC.",
+                    "fa_icon": "fas fa-cog",
+                    "hidden": true
+                },
+                "tracedir": {
+                    "type": "string",
+                    "description": "Directory to keep pipeline Nextflow logs and reports.",
+                    "default": "${params.outdir}/pipeline_info",
+                    "fa_icon": "fas fa-cogs",
+                    "hidden": true
+                },
+                "show_hidden_params": {
+                    "type": "boolean",
+                    "fa_icon": "far fa-eye-slash",
+                    "description": "Show all params when using `--help`",
+                    "hidden": true,
+                    "help_text": "By default, parameters set as _hidden_ in the schema are not shown on the command line when a user runs with `--help`. Specifying this option will tell the pipeline to show all parameters."
+                }
+            }
+        },
+        "max_job_request_options": {
+            "title": "Max job request options",
+            "type": "object",
+            "fa_icon": "fab fa-acquisitions-incorporated",
+            "description": "Set the top limit for requested resources for any single job.",
+            "help_text": "If you are running on a smaller system, a pipeline step requesting more resources than are available may cause the Nextflow to stop the run with an error. These options allow you to cap the maximum resources requested by any single job so that the pipeline will run on your system.\n\nNote that you can not _increase_ the resources requested by any job using these options. For that you will need your own configuration file. See [the nf-core website](https://nf-co.re/usage/configuration) for details.",
+            "properties": {
+                "max_cpus": {
+                    "type": "integer",
+                    "description": "Maximum number of CPUs that can be requested    for any single job.",
+                    "default": 16,
+                    "fa_icon": "fas fa-microchip",
+                    "hidden": true,
+                    "help_text": "Use to set an upper-limit for the CPU requirement for each process. Should be an integer e.g. `--max_cpus 1`"
+                },
+                "max_memory": {
+                    "type": "string",
+                    "description": "Maximum amount of memory that can be requested for any single job.",
+                    "default": "128.GB",
+                    "fa_icon": "fas fa-memory",
+                    "pattern": "^[\\d\\.]+\\s*.(K|M|G|T)?B$",
+                    "hidden": true,
+                    "help_text": "Use to set an upper-limit for the memory requirement for each process. Should be a string in the format integer-unit e.g. `--max_memory '8.GB'`"
+                },
+                "max_time": {
+                    "type": "string",
+                    "description": "Maximum amount of time that can be requested for any single job.",
+                    "default": "240.h",
+                    "fa_icon": "far fa-clock",
+                    "pattern": "^[\\d\\.]+\\.*(s|m|h|d)$",
+                    "hidden": true,
+                    "help_text": "Use to set an upper-limit for the time requirement for each process. Should be a string in the format integer-unit e.g. `--max_time '2.h'`"
+                }
+            }
+        },
+        "institutional_config_options": {
+            "title": "Institutional config options",
+            "type": "object",
+            "fa_icon": "fas fa-university",
+            "description": "Parameters used to describe centralised config profiles. These should not be edited.",
+            "help_text": "The centralised nf-core configuration profiles use a handful of pipeline parameters to describe themselves. This information is then printed to the Nextflow log when you run a pipeline. You should not need to change these values when you run a pipeline.",
+            "properties": {
+                "custom_config_version": {
+                    "type": "string",
+                    "description": "Git commit id for Institutional configs.",
+                    "default": "master",
+                    "hidden": true,
+                    "fa_icon": "fas fa-users-cog",
+                    "help_text": "Provide git commit id for custom Institutional configs hosted at `nf-core/configs`. This was implemented for reproducibility purposes. Default: `master`.\n\n```bash\n## Download and use config file with following git commit id\n--custom_config_version d52db660777c4bf36546ddb188ec530c3ada1b96\n```"
+                },
+                "custom_config_base": {
+                    "type": "string",
+                    "description": "Base directory for Institutional configs.",
+                    "default": "https://raw.githubusercontent.com/nf-core/configs/master",
+                    "hidden": true,
+                    "help_text": "If you're running offline, nextflow will not be able to fetch the institutional config files from the internet. If you don't need them, then this is not a problem. If you do need them, you should download the files from the repo and tell nextflow where to find them with the `custom_config_base` option. For example:\n\n```bash\n## Download and unzip the config files\ncd /path/to/my/configs\nwget https://github.com/nf-core/configs/archive/master.zip\nunzip master.zip\n\n## Run the pipeline\ncd /path/to/my/data\nnextflow run /path/to/pipeline/ --custom_config_base /path/to/my/configs/configs-master/\n```\n\n> Note that the nf-core/tools helper package has a `download` command to download all required pipeline files + singularity containers + institutional configs in one go for you, to make this process easier.",
+                    "fa_icon": "fas fa-users-cog"
+                },
+                "hostnames": {
+                    "type": "string",
+                    "description": "Institutional configs hostname.",
+                    "hidden": true,
+                    "fa_icon": "fas fa-users-cog"
+                },
+                "config_profile_name": {
+                    "type": "string",
+                    "description": "Institutional config name.",
+                    "hidden": true,
+                    "fa_icon": "fas fa-users-cog"
+                },
+                "config_profile_description": {
+                    "type": "string",
+                    "description": "Institutional config description.",
+                    "hidden": true,
+                    "fa_icon": "fas fa-users-cog"
+                },
+                "config_profile_contact": {
+                    "type": "string",
+                    "description": "Institutional config contact information.",
+                    "hidden": true,
+                    "fa_icon": "fas fa-users-cog"
+                },
+                "config_profile_url": {
+                    "type": "string",
+                    "description": "Institutional config URL link.",
+                    "hidden": true,
+                    "fa_icon": "fas fa-users-cog"
+                }
+            }
+        }
+    },
+    "allOf": [
+        {
+            "$ref": "#/definitions/input_output_options"
+        },
+        {
+            "$ref": "#/definitions/genome_options"
+        },
+        {
+            "$ref": "#/definitions/read_trimming_options"
+        },
+        {
+            "$ref": "#/definitions/alignment_options"
+        },
+        {
+            "$ref": "#/definitions/classification_options"
+        },
+        {
+            "$ref": "#/definitions/generic_options"
+        },
+        {
+            "$ref": "#/definitions/max_job_request_options"
+        },
+        {
+            "$ref": "#/definitions/institutional_config_options"
+        }
+    ]
+}

@@ -1,0 +1,13 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+#!genome-build ViralMultiSegProj14631
+#!genome-build-accession NCBI_Assembly:GCF_000847345.1
+##sequence-region NC_014396.1 1 3885
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=11588
+NC_014396.1	RefSeq	region	1	3885	.	+	.	ID=NC_014396.1:1..3885;Dbxref=taxon:11588;Name=M;collection-date=1977;country=Egypt: Sharqiya;gbkey=Src;genome=genomic;isolation-source=human sera;mol_type=genomic RNA;nat-host=Homo sapiens;segment=M;strain=ZH-548
+NC_014396.1	RefSeq	primer_binding_site	1	15	.	+	.	ID=id-NC_014396.1:1..15;gbkey=primer_bind
+NC_014396.1	RefSeq	gene	21	3614	.	+	.	ID=gene-RVFV_sM_gp1;Dbxref=GeneID:9538296;Name=RVFV_sM_gp1;gbkey=Gene;gene_biotype=protein_coding;locus_tag=RVFV_sM_gp1
+NC_014396.1	RefSeq	CDS	21	3614	.	+	0	ID=cds-YP_003848705.1;Parent=gene-RVFV_sM_gp1;Dbxref=Genbank:YP_003848705.1,GeneID:9538296;Name=YP_003848705.1;Note=NSm%3B Gn%3B Gc;gbkey=CDS;locus_tag=RVFV_sM_gp1;product=glycoprotein;protein_id=YP_003848705.1
+NC_014396.1	RefSeq	primer_binding_site	3865	3885	.	-	.	ID=id-NC_014396.1:3865..3885;gbkey=primer_bind
+###

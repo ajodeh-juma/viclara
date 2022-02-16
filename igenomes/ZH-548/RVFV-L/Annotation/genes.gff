@@ -1,0 +1,11 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+#!genome-build ViralMultiSegProj14631
+#!genome-build-accession NCBI_Assembly:GCF_000847345.1
+##sequence-region NC_014397.1 1 6404
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=11588
+NC_014397.1	RefSeq	region	1	6404	.	+	.	ID=NC_014397.1:1..6404;Dbxref=taxon:11588;Name=L;collection-date=1977;country=Egypt: Sharqiya;gbkey=Src;genome=genomic;isolation-source=human sera;mol_type=genomic RNA;segment=L;strain=ZH-548
+NC_014397.1	RefSeq	gene	19	6297	.	+	.	ID=gene-RVFV_sL_gp1;Dbxref=GeneID:9538294;Name=RVFV_sL_gp1;gbkey=Gene;gene_biotype=protein_coding;locus_tag=RVFV_sL_gp1
+NC_014397.1	RefSeq	CDS	19	6297	.	+	0	ID=cds-YP_003848704.1;Parent=gene-RVFV_sL_gp1;Dbxref=Genbank:YP_003848704.1,GeneID:9538294;Name=YP_003848704.1;gbkey=CDS;locus_tag=RVFV_sL_gp1;product=polymerase;protein_id=YP_003848704.1
+###
