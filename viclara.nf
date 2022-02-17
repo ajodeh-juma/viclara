@@ -194,8 +194,8 @@ include { KRAKEN2_MPA_SUMMARY                         } from './modules/local/pr
 include { KRAKEN2_MPA_PLOT                            } from './modules/local/process/kraken2_mpa_plot.nf'                   addParams(options: modules['plots']                                                                                                                                                                        )
 include { CONSENSUS_QC                                } from './modules/local/process/consensus_qc'                          addParams( options: modules['consensus_qc']                                                                                                                                                   )
 include { QC_SUMMARY_CSV                              } from './modules/local/process/qc_summary_csv'                        addParams( options: modules['consensus_qc']                                                                                                                                                   )
-include { COUNT_READS as RAW_COUNTS                   } from './modules/local/process/count_reads'                           addParams( options: modules['raw_counts']                                                                                                                                                    )
-include { COUNT_READS as TRIMMED_COUNTS               } from './modules/local/process/count_reads'                           addParams( options: modules['trimmed_counts']                                                                                                                                                )
+include { READ_COUNT as READS_RAW                     } from './modules/local/process/read_count'                            addParams( options: modules['raw_counts']                                                                                                                                                      )
+include { READ_COUNT as READS_TRIMMED                 } from './modules/local/process/read_count'                            addParams( options: modules['trimmed_counts']                                                                                                                                                  )
 include { PARSE_FLAGSTAT                              } from './modules/local/process/parse_alignment_stats'                 addParams( options: modules['alignment_stats']                                                                                                                                               )
 include { MERGE_COUNTS as MERGE_RAW_COUNTS            } from './modules/local/process/merge_counts'                          addParams( options: modules['merge_raw_counts']                                                                                                                                                )
 include { MERGE_COUNTS as MERGE_TRIMMED_COUNTS        } from './modules/local/process/merge_counts'                          addParams( options: modules['merge_trimmed_counts']                                                                                                                                                 )
@@ -275,7 +275,10 @@ workflow viclara {
         ch_software_versions = ch_software_versions.mix(FASTQC.out.version.first().ifEmpty(null))
 
         // count raw reads
-        ch_raw_counts = RAW_COUNTS(ch_reads)
+        // ch_raw_counts = RAW_COUNTS(ch_reads)
+
+        READS_RAW(ch_reads)
+        ch_raw_counts = READS_RAW.out.csv
     }
 
     // MODULE: Trim reads
@@ -292,7 +295,9 @@ workflow viclara {
         ch_software_versions = ch_software_versions.mix(FASTP.out.version.first().ifEmpty(null))
 
         // count trimmed reads
-        ch_trimmed_counts = TRIMMED_COUNTS(ch_trimmed_reads)
+        // ch_trimmed_counts = TRIMMED_COUNTS(ch_trimmed_reads)
+        READS_TRIMMED(ch_trimmed_reads)
+        ch_trimmed_counts    = READS_TRIMMED.out.csv
     }
     
     ch_trimmomatic_multiqc = Channel.empty()
@@ -303,7 +308,9 @@ workflow viclara {
         ch_software_versions = ch_software_versions.mix(TRIMMOMATIC.out.version.first().ifEmpty(null))
 
         // count trimmed reads
-        ch_trimmed_counts = TRIMMED_COUNTS(ch_trimmed_reads)
+        // ch_trimmed_counts = TRIMMED_COUNTS(ch_trimmed_reads)
+        READS_TRIMMED(ch_trimmed_reads)
+        ch_trimmed_counts    = READS_TRIMMED.out.csv
     }
 
     // SUBWORKFLOW: classify reads with Kraken2 and visualize

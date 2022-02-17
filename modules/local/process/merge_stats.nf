@@ -25,12 +25,10 @@ process MERGE_STATS {
     
 
     if (!params.run_id) {
-        def prefix = new java.util.Date().format( 'yyyy-MM-dd_HH-mm-ss')
         """
         merge_stats.py --raw $raw  --trimmed $trimmed --mapped $mapped --prefix $prefix
         """
     } else {
-        def prefix   = "${params.run_id}"
         """
         merge_stats.py --raw $raw  --trimmed $trimmed --mapped $mapped --prefix $prefix
         """

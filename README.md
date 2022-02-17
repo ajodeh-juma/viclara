@@ -146,7 +146,7 @@ Alignment options
   --aligner                    [string]  Specifies the alignment algorithm to use - available options are 'bwa', 'bowtie2'. [default: bwa]
   --seq_center                 [string]  Sequencing center information to be added to read group of BAM files.
   --save_align_intermeds       [boolean] Save the intermediate BAM files from the alignment step.
-  --min_mapped                 [integer] Minimum number of mapped reads to be used as threshold to drop low mapped samples [default: 500]
+  --min_mapped                 [integer] Minimum number of mapped reads to be used as threshold to drop low mapped samples [default: 200]
 
 Variant calling options
   --variant_caller             [string]  Specifies the variant calling algorithm to use - available options are 'bcftools', 'varscan'. [default: 
@@ -172,7 +172,9 @@ Reads classification options
   --database                   [string]  Path to the kraken2 database name
 ```
 
+## Output
 
+All the output results will be written to the `results` directory if no `--outdir` is not used. Masked and non-masked consensus genomes will be located in `bcftools/consensus`
 
 
 See [usage docs](https://github.com/ajodeh-juma/viclara/usage) for all of the available options when running the pipeline.
