@@ -39,18 +39,16 @@ def get_read_stats(stats, output):
     stats_dic = dict()
     sampleid = os.path.basename(stats)
     sampleid = os.path.splitext(sampleid)[0]
-    print(sampleid)
 
 
     for line in open(stats):
         line = line.strip()
-        if 'Reads Processed' in line:
-            reads = line.strip().split()[2]
+        if 'Input:' in line:
+            reads = line.strip().split()[1]
             stats_dic[sampleid] = reads
 
     col_names = {'index': 'Sample', 0: 'Reads'}
     df = pd.DataFrame.from_dict(stats_dic, orient='index').reset_index().rename(columns=col_names)
-    print(df)
     df.to_csv(output, index=False, sep="\t")
     return output
 

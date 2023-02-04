@@ -40,6 +40,7 @@ process SNPEFF_ANNOTATE {
     """
     annotate_variants.py \\
         --reference $fasta \\
+        --prefix ${prefix} \\
         --gff $gff \\
         --vcf-file $vcf \\
         --csv ${prefix}.snpEff.csv \\

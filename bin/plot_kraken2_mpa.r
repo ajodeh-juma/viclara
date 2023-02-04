@@ -86,7 +86,8 @@ species.counts.df <- data.frame(species.data, row.names = 1,
 species.counts.df = log2(species.counts.df + 1)
 
 fontsize <- 12
-colors = c("#fcffa4","#bc3754","#57106e")
+colors <- c("#fcffa4","#bc3754","#57106e")
+# colours <- c("#440154", "#21918c", "#fde725")
 hm <- pheatmap::pheatmap(as.matrix(species.counts.df), 
                          color=c(colors),
                          cluster_rows=TRUE, cluster_cols=TRUE,

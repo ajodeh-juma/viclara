@@ -2,7 +2,7 @@
 
 <!-- **Identify Rift Valley Fever virus lineages of a nucleotide sequence**. -->
 
-- [Introduction](#introduction)
+  - [Introduction](#introduction)
   - [Installation](#installation)
   - [Testing](#test)
   - [Usage](#usage)

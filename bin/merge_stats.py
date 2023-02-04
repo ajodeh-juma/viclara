@@ -64,6 +64,7 @@ def merge_dfs(raw, trimmed, mapped, prefix):
                           [df, mapped])
 
     df = df.rename(columns={'Reads_x': 'before_trim', 'Reads_y': 'after_trim'})
+    
     # write to output
     output = prefix + '.read.counts.csv'
     df.to_csv(output, index=False, sep=",")

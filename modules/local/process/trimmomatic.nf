@@ -45,7 +45,7 @@ process TRIMMOMATIC {
             LEADING:${params.leading} TRAILING:${params.trailing} SLIDINGWINDOW:${params.window_size}:${params.window_quality} MINLEN:${params.min_length} \\
             2> ${prefix}.trimmomatic.log
 
-        echo \$(trimmomatic --version 2>&1) | sed -e "s/trimmomatic //g" > ${software}.version.txt
+        echo \$(trimmomatic -version 2>&1) | sed -e "s/trimmomatic //g" > ${software}.version.txt
         """
     } else if (params.single_end && params.adapters) {
         """
@@ -59,7 +59,7 @@ process TRIMMOMATIC {
             LEADING:${params.leading} TRAILING:${params.trailing} SLIDINGWINDOW:${params.window_size}:${params.window_quality} MINLEN:${params.min_length} \\
             2> ${prefix}.trimmomatic.log
 
-        echo \$(trimmomatic --version 2>&1) | sed -e "s/trimmomatic //g" > ${software}.version.txt
+        echo \$(trimmomatic -version 2>&1) | sed -e "s/trimmomatic //g" > ${software}.version.txt
         """
     } else if (!params.single_end && !params.adapters) {
         """
@@ -77,7 +77,7 @@ process TRIMMOMATIC {
             LEADING:${params.leading} TRAILING:${params.trailing} SLIDINGWINDOW:${params.window_size}:${params.window_quality} MINLEN:${params.min_length} \\
             2> ${prefix}.trimmomatic.log
 
-        echo \$(trimmomatic --version 2>&1) | sed -e "s/trimmomatic //g" > ${software}.version.txt
+        echo \$(trimmomatic -version 2>&1) | sed -e "s/trimmomatic //g" > ${software}.version.txt
         """
     } else {
         """
@@ -96,7 +96,7 @@ process TRIMMOMATIC {
             LEADING:${params.leading} TRAILING:${params.trailing} SLIDINGWINDOW:${params.window_size}:${params.window_quality} MINLEN:${params.min_length} \\
             2> ${prefix}.trimmomatic.log
 
-        echo \$(trimmomatic --version 2>&1) | sed -e "s/trimmomatic //g" > ${software}.version.txt
+        echo \$(trimmomatic -version 2>&1) | sed -e "s/trimmomatic //g" > ${software}.version.txt
         """
     }
 }

@@ -60,7 +60,9 @@ def merge(input, prefix):
         if os.path.exists(f) and os.path.getsize(f) == 0:
             continue
         else:
-            names.append(os.path.splitext(os.path.basename(f))[0].rsplit(".")[0])
+            # sample = os.path.splitext(os.path.basename(f))[0].strip('kraken2.report')
+            sample = os.path.splitext(os.path.basename(f))[0].rsplit('.')[0]
+            names.append(sample)
             with open(f) as fin:
                 headers = [x.strip() for x in takewhile(lambda x: x.startswith('#'), fin)]
                 if len(headers) == 0:
@@ -79,11 +81,10 @@ def merge(input, prefix):
             df = df.div(val, level=0) * 100
 
             if merged_tables.empty:
-                merged_tables = df.iloc[:, 0].rename(
-                    os.path.splitext(os.path.basename(f))[0].rsplit('.')[0]).to_frame()
+                merged_tables = df.iloc[:, 0].rename(sample).to_frame()
             else:
                 merged_tables = pd.merge(
-                    df.iloc[:, 0].rename(os.path.splitext(os.path.basename(f))[0].rsplit('.')[0]).to_frame(),
+                    df.iloc[:, 0].rename(sample).to_frame(),
                     merged_tables,
                     how='outer',
                     left_index=True,
@@ -101,6 +102,7 @@ def merge(input, prefix):
     sp_df = sp_df.rename(columns={'clade_name': 'sample'})
 
     species_summary = prefix + '.kraken2.species.txt'
+    print(species_summary)
     sp_df.to_csv(species_summary, index=False, sep="\t")
 
     return output

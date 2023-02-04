@@ -12,3 +12,4 @@ testing*
 .idea*
 .github*
 .gitattributes
+cluster.sh

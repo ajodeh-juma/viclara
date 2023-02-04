@@ -60,10 +60,10 @@ def merge_csv(input, read_counts, prefix):
 
     rc = pd.read_csv(read_counts)
     rc = rc.rename(columns={"Sample": "sample_name"})
-    rc['pct_mapped'] = rc['mapped']/rc['after_trim'] * 100
+    rc['pct_mapped'] = rc['mapped']/rc['total_paired'] * 100
     rc['pct_mapped'] = rc['pct_mapped'].astype(float).round(2)
     merged = pd.merge(rc, df, on='sample_name')
-    merged = merged.drop(columns=['total_paired', 'num_aligned_reads'])
+    # merged = merged.drop(columns=['total_paired', 'num_aligned_reads'])
     output = prefix + '.quality.control.csv'
     merged.to_csv(output, index=False, sep=",")
 

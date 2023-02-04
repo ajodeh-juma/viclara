@@ -76,6 +76,7 @@ def build_snpeff_db(reference, gff, snpeff_config, snpeff_db):
     # create SnpEff database
     prefix = os.path.join(os.path.abspath(os.path.dirname(reference)), os.path.splitext(os.path.basename(reference))[0])
     index_base = os.path.basename(prefix)
+    print(index_base)
     snpeff_data_dir = os.path.join(snpeff_db, 'data')
     snpeff_genes_dir = os.path.join(snpeff_data_dir, index_base)
     mkdir(snpeff_data_dir)

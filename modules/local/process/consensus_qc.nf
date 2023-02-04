@@ -11,11 +11,11 @@ process CONSENSUS_QC {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta.id) }
 
-    conda (params.enable_conda ? "bioconda::ivar=1.3.1" : null)
+    conda (params.enable_conda ? "conda-forge::python=3.6.1" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/ivar:1.3.1--h089eab3_0"
+        container "https://depot.galaxyproject.org/singularity/python:3.6.1"
     } else {
-        container "quay.io/biocontainers/ivar:1.3.1--h089eab3_0"
+        container "quay.io/biocontainers/python:3.6.1"
     }
 
     input:

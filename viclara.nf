@@ -267,6 +267,8 @@ workflow viclara {
     // channel to collect software versions
     ch_software_versions = Channel.empty()
 
+    // println ch_reads.view()
+
     // MODULE: FastQC
     ch_fastqc_multiqc = Channel.empty()
     if (!params.skip_qc) {
@@ -552,9 +554,11 @@ workflow viclara {
             [meta , file(row[1][1])]
             }
         .set {ch_consensus_fa}
+
+    // println (ch_consensus_fasta.view())
     
     ch_consensus_qc = ch_bam.join(ch_consensus_fa)
-    CONSENSUS_QC (ch_consensus_qc, ch_fasta)
+    CONSENSUS_QC (ch_consensus_qc, ch_fasta.collect())
 
     // MODULE: collate the qc csv files
     ch_qc_csv = CONSENSUS_QC.out.csv

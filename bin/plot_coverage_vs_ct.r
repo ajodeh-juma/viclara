@@ -59,10 +59,12 @@ if (is.null(args$metadata)) {
   metadata = data.frame(sample_name=character(), Ct=double())
 } else {
   # read the metadata table (having Ct values)
-  metadata.raw <- read.table(args$metadata, header=T, sep=",")
+  metadata.raw <- read.csv(args$metadata, header=T, sep=",")
   metadata = subset(metadata.raw, Ct != "NA")
   metadata$Ct = as.numeric(as.character(metadata$Ct))
 }
+
+print(metadata)
 
 ###########################################
 #######      read input files       #######
@@ -70,9 +72,11 @@ if (is.null(args$metadata)) {
 
 # read the consensus qc summary file
 cons <- read.csv(file = summary, sep = ",", header = TRUE)
+print(cons)
 
 # merge dataframes
 data <- merge(cons, metadata, by="sample_name")
+print(data)
 
 d <- data %>% 
   arrange(desc(Ct)) %>% 
