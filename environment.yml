@@ -10,7 +10,7 @@ dependencies:
   - conda-forge::biopython=1.78
   - conda-forge::markdown=3.3.3
   - conda-forge::pandas #=1.0.5
-  - conda-forge::python=3.6.12
+  - conda-forge::python>=3.6 #.12
   - conda-forge::r-argparse=2.0.3
   - conda-forge::r-base=4.0.3
   - conda-forge::r-cowplot=1.1.0
@@ -40,7 +40,7 @@ dependencies:
   - bioconda::fastqc=0.11.9
   - bioconda::kraken2=2.1.1
   # - bioconda::mosdepth
-  - bioconda::multiqc #=1.9
+  - bioconda::multiqc>=1.9
   # - bioconda::mummer=3.23
   - bioconda::nextflow>=20.10.0
   - bioconda::picard=2.25.1
