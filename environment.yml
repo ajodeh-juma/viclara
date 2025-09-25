@@ -40,7 +40,7 @@ dependencies:
   - bioconda::fastqc=0.11.9
   - bioconda::kraken2=2.1.1
   # - bioconda::mosdepth
-  - bioconda::multiqc=1.9
+  - bioconda::multiqc #=1.9
   # - bioconda::mummer=3.23
   - bioconda::nextflow>=20.10.0
   - bioconda::picard=2.25.1
