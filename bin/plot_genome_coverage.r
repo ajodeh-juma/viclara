@@ -117,5 +117,3 @@ for(i in seq(1, ceiling(num_samples / plots_per_page))) {
   print(cov.plot)
 }
 dev.off()
-
-
