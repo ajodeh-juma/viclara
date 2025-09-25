@@ -33,6 +33,7 @@ dependencies:
   - bioconda::bbmap=38.87
   - bioconda::bcftools=1.10.2
   - bioconda::bedtools=2.29.2
+  - bioconda::bioconductor-biostrings=2.58.0
   - bioconda::bioconductor-complexheatmap #=2.6.2         #r40_0
   - bioconda::bowtie2=2.4.2
   - bioconda::bwa=0.7.17
