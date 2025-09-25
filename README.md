@@ -44,8 +44,8 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
 ```
 git clone https://github.com/ajodeh-juma/viclara.git
 cd viclara
-conda env create -n viclara-dev1.0 -f environment.yml
-conda activate viclara-dev1.0
+conda env create -f environment.yml
+conda activate viclara-env
 ```
 
 ## Testing

@@ -1,6 +1,6 @@
 # You can use this file to create a conda environment for this pipeline:
 #   conda env create -f environment.yml
-name: viclara-1.0
+name: viclara-env
 channels:
   - conda-forge
   - bioconda
@@ -9,7 +9,7 @@ channels:
 dependencies:
   - conda-forge::biopython=1.78
   - conda-forge::markdown=3.3.3
-  - conda-forge::pandas=1.0.5
+  - conda-forge::pandas #=1.0.5
   - conda-forge::python=3.6.12
   - conda-forge::r-argparse=2.0.3
   - conda-forge::r-base=4.0.3
@@ -29,11 +29,11 @@ dependencies:
   - conda-forge::r-viridis=0.5.1
 
   # required software dependencies here
-  - bioconda::abacas=1.3.1
+  # - bioconda::abacas=1.3.1
   - bioconda::bbmap=38.87
   - bioconda::bcftools=1.10.2
   - bioconda::bedtools=2.29.2
-  - bioconda::bioconductor-complexheatmap=2.6.2         #r40_0
+  - bioconda::bioconductor-complexheatmap #=2.6.2         #r40_0
   - bioconda::bowtie2=2.4.2
   - bioconda::bwa=0.7.17
   - bioconda::fastp=0.20.1
@@ -42,13 +42,13 @@ dependencies:
   # - bioconda::mosdepth
   - bioconda::multiqc=1.9
   # - bioconda::mummer=3.23
-  # - bioconda::nextflow=20.10.0
+  - bioconda::nextflow>=20.10.0
   - bioconda::picard=2.25.1
   - bioconda::samtools=1.10
   - bioconda::snpeff=5.0
   - bioconda::snpsift=4.3.1t
   - bioconda::spades=3.14.0
   - bioconda::trimmomatic=0.39
-  - bioconda::trinity
+  # - bioconda::trinity
   - bioconda::varscan=2.4.4
   
