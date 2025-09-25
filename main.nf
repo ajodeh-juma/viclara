@@ -65,8 +65,9 @@ Checks.hostname(workflow, params, log)
 /* --           RUN MAIN WORKFLOW              -- */
 ////////////////////////////////////////////////////
 
+include { viclara } from './viclara' addParams( summary_params: summary_params )
+
 workflow {
-    include { viclara } from './viclara' addParams( summary_params: summary_params )
     viclara ()
 }
 
